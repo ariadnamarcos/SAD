@@ -1,0 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package EditableBufferedReader;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+
+import java.io.*;
+
+/**
+ *
+ * @author ariadna
+ */
+public class EditableBufferedReader extends BufferedReader {
+
+    public EditableBufferedReader(Reader in) {
+        super(in);
+    }
+
+    public static void main(String[] args) {
+        try {
+            /*
+            System.out.println("passem a mode raw");
+            setRaw();
+            Thread.sleep(3000);
+            unsetRaw();
+            System.out.println("Hem tornat a mode cooked");
+             */
+
+            BufferedReader in = new EditableBufferedReader(
+                    new InputStreamReader(System.in));
+            
+            int c = in.read();
+            System.out.println("Caràcter llegit: " + c);
+
+        } catch (IOException ie/*| InterruptedException */) {
+            ie.printStackTrace();
+        }
+    }
+
+    public static void setRaw() throws IOException, InterruptedException {
+
+        List<String> command = new ArrayList<>();
+        command.add("/bin/sh");
+        command.add("-c");
+        command.add("stty -echo raw");
+
+        ProcessBuilder pb = new ProcessBuilder(command);
+
+        pb.inheritIO();
+
+        Process p = pb.start();
+        p.waitFor();
+
+    }
+
+    public static void unsetRaw() throws IOException, InterruptedException { // passa de mode RAW a COOKED
+
+        List<String> command = new ArrayList<>();
+        command.add("/bin/sh");
+        command.add("-c");
+        command.add("reset");
+
+        ProcessBuilder pb = new ProcessBuilder(command);
+
+        pb.inheritIO();
+
+        Process p = pb.start();
+        p.waitFor();
+
+    }
+
+    public int read() throws IOException{
+        int c = super.read();
+        return c;
+    }
+
+    /*
+    public void readLine() {
+    } // llegeix la linia amb possibilitat d'editarla
+     */
+}
